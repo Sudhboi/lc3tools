@@ -104,7 +104,7 @@ void help(void)
               << "list [N]                 - display the next instruction to be executed with N rows of context\n"
               << "load <filename>          - loads an object file\n"
               << "mem <start> [<end>]      - display values in memory addresses start to end\n"
-              << "mem_list <start> [N]      - display values in memory addresses start to end\n"
+              << "mem_list <start> <N>     - display values in N memory addresses from the start.\n"
 #ifdef _ENABLE_DEBUG
               << "printlevel N             - sets the print level to N\n"
 #endif
