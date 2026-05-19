@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include <cstdint>
 
 #include "aliases.h"
 #include "asm_types.h"

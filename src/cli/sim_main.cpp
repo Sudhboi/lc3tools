@@ -104,6 +104,7 @@ void help(void)
               << "list [N]                 - display the next instruction to be executed with N rows of context\n"
               << "load <filename>          - loads an object file\n"
               << "mem <start> [<end>]      - display values in memory addresses start to end\n"
+              << "mem_list <start> [N]      - display values in memory addresses start to end\n"
 #ifdef _ENABLE_DEBUG
               << "printlevel N             - sets the print level to N\n"
 #endif
@@ -199,6 +200,39 @@ bool promptMain(lc3::sim & simulator, std::stringstream & command_tokens)
                 std::cout << formatMem(simulator, addr) << "\n";
             }
         }
+    } else if(command == "mem_list") {
+        std::string start_s, num_s;
+        command_tokens >> start_s;
+        if(command_tokens.fail()) {
+            std::cout << "must supply start address\n";
+            return true;
+        }
+        command_tokens >> num_s;
+        if(command_tokens.fail()) {
+            std::cout << "must supply number of addresses\n";
+            return true;
+        }
+
+        uint32_t start, num;
+        try {
+            start = std::stoi(start_s, 0, 0);
+            num = std::stoi(num_s, 0, 0);
+        } catch(std::exception const & e) {
+            (void) e;
+            std::cout << "invalid address\n";
+            return true;
+        }
+        if (num < 1) {
+            std::cout << "invalid number of addresses\n";
+            return true;
+        }
+
+        for(uint32_t inc = 0; inc < num; inc +=1 ) {
+            if(start + inc < 0xffff) {
+                std::cout << formatMem(simulator, start + inc) << "\n";
+            }
+        }
+
 #ifdef _ENABLE_DEBUG
     } else if(command == "printlevel") {
         uint32_t print_level;
@@ -391,7 +425,11 @@ std::string formatMem(lc3::sim const & simulator, uint32_t addr)
     std::stringstream out;
     uint32_t value = simulator.readMem(addr);
     std::string line = simulator.getMemLine(addr);
-    out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X %s", addr, value, line.c_str());
+    if (32 <= value && value <= 255) {
+        out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X (%5d) (%c)", addr, value, value, value);
+    } else {
+        out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X (%5d) %s", addr, value, value, line.c_str());
+    }
     return out.str();
 }
 

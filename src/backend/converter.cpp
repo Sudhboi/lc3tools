@@ -7,6 +7,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <cstdint>
 
 #ifdef _ENABLE_DEBUG
     #include <chrono>
