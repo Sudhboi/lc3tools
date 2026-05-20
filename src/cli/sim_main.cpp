@@ -428,7 +428,7 @@ std::string formatMem(lc3::sim const & simulator, uint32_t addr)
     if (32 <= value && value <= 255) {
         out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X (%5d) (%c)", addr, value, value, value);
     } else {
-        out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X (%5d) %s", addr, value, value, line.c_str());
+        out << lc3::utils::ssprintf("0x%0.4X: 0x%0.4X (%6d) %s", addr, value, (value >= 32768 ? -(65536 - value) : value), line.c_str());
     }
     return out.str();
 }
